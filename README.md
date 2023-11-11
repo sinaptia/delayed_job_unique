@@ -1,35 +1,55 @@
-# DelayedJobUniq
+# Delayed Job Uniq
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/delayed_job_uniq`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Delayed Job Uniq is a Ruby gem that provides an extension to `delayed_job_active_record` for handling unique jobs in the queue.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add the following lines to your application's Gemfile:
 
 ```ruby
+gem 'delayed_job_active_record'
 gem 'delayed_job_uniq'
 ```
 
 And then execute:
 
-    $ bundle
+    $ bundle install
 
 Or install it yourself as:
 
     $ gem install delayed_job_uniq
 
 ## Usage
+It's just a extension for Delayed Job
+You can use the enqueue_once method to add unique jobs to the queue:
 
-TODO: Write usage instructions here
+```ruby
+class MyUniqueJob
+  def perform
+    # Your job logic here
+  end
+
+  def unique_key
+    # Return a unique key for the job (String)
+  end
+end
+
+# Enqueue the job only if it's not already in the queue
+Delayed::Job.enqueue_once MyUniqueJob.new
+```
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+```bash
+git clone https://github.com/sinaptia/delayed_job_uniq.git
+cd delayed_job_uniq
+bundle install
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/delayed_job_uniq.
+1. Fork it
+2. Create your feature branch (`git checkout -b feature/my-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin feature/my-feature`)
+5. Create a new Pull Request
