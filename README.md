@@ -4,24 +4,29 @@ Delayed Job Uniq is a Ruby gem that provides an extension to `delayed_job_active
 
 ## Installation
 
-Add the following lines to your application's Gemfile:
+```bash
+$ bundle add delayed_job_unique
+```
+Or add the following line to your application's Gemfile:
 
 ```ruby
-gem 'delayed_job_active_record'
-gem 'delayed_job_uniq'
+gem 'delayed_job_unique'
 ```
 
 And then execute:
 
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install delayed_job_uniq
+```bash
+$ bundle install
+```
 
 ## Usage
-It's just a extension for Delayed Job
-You can use the enqueue_once method to add unique jobs to the queue:
+
+The gem provides a `Delayed::Job::enqueue_once` class method which will use the `unique_key` of your job to check for other **not failed** jobs enqueued under the same key.
+This provides a simple yet flexible mechanism to finely control the concurrency on each Job class.
+
+If the job was already enqueued it will return `false`, otherwise it will return the enqueued job instance.
+
+## Example
 
 ```ruby
 class MyUniqueJob
@@ -35,13 +40,17 @@ class MyUniqueJob
 end
 
 # Enqueue the job only if it's not already in the queue
-Delayed::Job.enqueue_once MyUniqueJob.new
+if Delayed::Job.enqueue_once(MyUniqueJob.new)
+  # job enqueued
+else
+  # job was already enqueued 
+end
 ```
 
 ## Development
 
 ```bash
-git clone https://github.com/sinaptia/delayed_job_uniq.git
+git clone https://github.com/sinaptia/delayed_job_unique.git
 cd delayed_job_uniq
 bundle install
 ```
