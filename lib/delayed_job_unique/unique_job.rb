@@ -2,15 +2,16 @@ require "delayed_job_active_record"
 
 module Delayed
   module UniqueJob
-    def enqueue_once(*args)
+    def enqueue_once(*args, **kwargs)
       job = args.first
       raise "Job `#{job.class}` must respond to `#unique_key`" unless job.respond_to?(:unique_key)
+      props = kwargs.merge({key: job.unique_key})
       Delayed::Job.transaction do
         if job_already_enqueued?(job)
           Delayed::Worker.logger.error "Job with key: #{job.unique_key} it's already on queue"
           false
         else
-          Delayed::Job.enqueue(job, key: job.unique_key)
+          Delayed::Job.enqueue(job, props)
         end
       end
     end
